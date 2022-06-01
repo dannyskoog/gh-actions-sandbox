@@ -1,0 +1,17 @@
+name: 'Build and release changes from Pull Requests to ArgoCD'
+description: 'Build and Release changes from Pull Requests'
+author: 'VOI'
+inputs:
+  pr-number:
+    required: false
+    type: string
+    description: "If pr-number is present, the action will checkout the pr branch. The default behaviour is to checkout the SHA for the event that triggered the action"
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ inputs.pr-number && "refs/pull/${{ inputs.pr-number }}/head" }}

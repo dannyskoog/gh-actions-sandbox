@@ -1,0 +1,17 @@
+name: PR comment
+
+on:
+  pull_request_review:
+    types: [submitted, edited]
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  build_and_release:
+    name: Build and release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build and release to env
+        uses: ./.github/actions/build-and-release-to-env
+        with:
+          pr-number: ${{ github.event.pull_request.number || github.event.issue.number }}

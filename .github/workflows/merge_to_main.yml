@@ -1,0 +1,17 @@
+name: Merge to main
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  build_and_release:
+    name: Build and release
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true # Only run for merged PRs
+    steps:
+      - name: Build and release to env
+        uses: ./.github/actions/build-and-release-to-env
