@@ -37,6 +37,7 @@ jobs:
     steps:
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
+          number: ${{ github.event.issue.number }}
           message: |
             :hourglass_flowing_sand: Deploying **${{ needs.get_preview_channel.outputs.preview_channel }}** environment. Please wait...
 
@@ -58,5 +59,6 @@ jobs:
     steps:
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
+          number: ${{ github.event.issue.number }}
           message: |
             :rocket: Deploy successful. Please access the environment [here](https://${{ needs.get_preview_channel.outputs.preview_channel }}.fm.stage.voiapp.io/)
