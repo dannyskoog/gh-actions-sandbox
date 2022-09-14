@@ -61,4 +61,4 @@ jobs:
         with:
           number: ${{ github.event.issue.number }}
           message: |
-            :rocket: **${{ needs.get_preview_channel.outputs.preview_channel }}** environment deployed. Please access it [here](https://${{ needs.get_preview_channel.outputs.preview_channel }}.fm.stage.voiapp.io/)
+            :rocket: Successful deploy of **${{ needs.get_preview_channel.outputs.preview_channel }}** environment. Please access it [here](https://${{ needs.get_preview_channel.outputs.preview_channel }}.fm.stage.voiapp.io/)
