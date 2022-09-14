@@ -1,20 +1,62 @@
-name: PR comment
-
+name: CD - Deploy preview
 on:
-  pull_request_review:
-    types: [submitted, edited]
   issue_comment:
     types: [created, edited]
 
 jobs:
-  build_and_release:
-    name: Build and release
+  get_preview_channel:
+    name: Get preview channel
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+    outputs:
+      preview_channel: ${{ steps.preview_channel.outputs.preview_channel }}
 
-      - name: Build and release to env
-        uses: ./.github/actions/build-and-release-to-env
+    if: |
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, 'deploy preview')
+
+    steps:
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: regex-match
         with:
-          pr-number: ${{ github.event.pull_request.number || github.event.issue.number }}
+          text: ${{ github.event.comment.body }}
+          regex: 'deploy (preview[123456])'
+
+      - name: Exit if preview channel not defined
+        if: ${{ steps.regex-match.outputs.match == '' }}
+        run: exit 1
+
+      - name: Write preview channel to env
+        id: preview_channel
+        run: echo "::set-output name=preview_channel::${{ steps.regex-match.outputs.group1 }}"
+
+  comment_deploy_in_progress:
+    needs: get_preview_channel
+    name: Comment deploy in progress
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            :hourglass_flowing_sand: Deploying **${{ needs.get_preview_channel.outputs.preview_channel }}** environment. Please wait...
+
+  deploy_preview:
+    needs: get_preview_channel
+    name: Deploy - ${{ needs.get_preview_channel.outputs.preview_channel }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Sleep for 10 seconds
+        run: sleep 10s
+        shell: bash
+
+  comment_deploy_finished:
+    needs: [get_preview_channel, deploy_preview]
+    name: Comment deploy finished
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            :rocket: Deploy successful. Please access the environment [here](https://${{ needs.get_preview_channel.outputs.preview_channel }}.fm.stage.voiapp.io/)
