@@ -40,6 +40,15 @@ jobs:
           number: ${{ github.event.issue.number }}
           message: |
             :hourglass_flowing_sand: Deploying **${{ needs.get_preview_channel.outputs.preview_channel }}** environment. Please wait...
+      - name: Get PR details
+        uses: xt0rted/pull-request-comment-branch@v1
+        id: comment-branch
+      - name: Set commit status as pending
+        uses: myrotvorets/set-commit-status-action@master
+        with:
+          sha: ${{ steps.comment-branch.outputs.head_sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: pending
 
   deploy_preview:
     needs: get_preview_channel
@@ -62,3 +71,13 @@ jobs:
           number: ${{ github.event.issue.number }}
           message: |
             :rocket: Successful deploy of **${{ needs.get_preview_channel.outputs.preview_channel }}** environment. Please access it [here](https://${{ needs.get_preview_channel.outputs.preview_channel }}.fm.stage.voiapp.io/)
+      - name: Get PR details
+        uses: xt0rted/pull-request-comment-branch@v1
+        id: comment-branch
+      - name: Set final commit status
+        uses: myrotvorets/set-commit-status-action@master
+        if: always()
+        with:
+          sha: ${{ steps.comment-branch.outputs.head_sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
