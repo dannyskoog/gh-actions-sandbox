@@ -45,9 +45,9 @@ jobs:
         with:
           repository: ${{ github.repository }}
           pr-number: ${{ github.event.issue.number }}
-          context: cool-context
+          context: ${{ github.workflow }}
           state: pending
-          description: This is so awesome to use a context in a PR
+          description: ""
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -78,8 +78,8 @@ jobs:
         with:
           repository: ${{ github.repository }}
           pr-number: ${{ github.event.issue.number }}
-          context: cool-context
+          context: ${{ github.workflow }}
           state: ${{ job.status }}
-          description: This is so awesome to use a context in a PR
+          description: ""
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
