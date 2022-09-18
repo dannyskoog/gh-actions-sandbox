@@ -47,7 +47,7 @@ jobs:
           pr-number: ${{ github.event.issue.number }}
           context: ${{ github.workflow }}
           state: pending
-          description: ""
+          description: " "
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -80,6 +80,6 @@ jobs:
           pr-number: ${{ github.event.issue.number }}
           context: ${{ github.workflow }}
           state: ${{ job.status }}
-          description: ""
+          description: " "
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
