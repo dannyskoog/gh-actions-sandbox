@@ -6,17 +6,27 @@ on:
     types: [submitted, edited]
 
 jobs:
-  comment:
-    name: Comment
+  create_new_comment:
+    name: Create new comment
     runs-on: ubuntu-latest
-    outputs:
-      preview_channel: ${{ steps.preview_channel.outputs.preview_channel }}
-
     if: |
-      contains(github.event.review.body, 'deploy to dev please') ||
-      (contains(github.event.comment.body, 'deploy to dev please') && github.event.issue.pull_request)
+      contains(github.event.review.body, 'create new comment') ||
+      (contains(github.event.comment.body, 'create new comment') && github.event.issue.pull_request)
 
     steps:
       - uses: dannyskoog/pr-commenter-action@main
         with:
-          message: This is my cool comment!
+          message: Created a new comment!
+
+  update_existing_comment:
+    name: Update existing comment
+    runs-on: ubuntu-latest
+    if: |
+      contains(github.event.review.body, 'update comment') ||
+      (contains(github.event.comment.body, 'update comment') && github.event.issue.pull_request)
+
+    steps:
+      - uses: dannyskoog/pr-commenter-action@main
+        with:
+          message: Updated existing comment!
+          updateExisting: true
