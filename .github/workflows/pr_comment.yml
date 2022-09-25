@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: dannyskoog/pr-commenter-action@main
         with:
-          message: Created a new comment!
+          message: Create new comment
 
   update_existing_comment:
     name: Update existing comment
@@ -28,5 +28,14 @@ jobs:
     steps:
       - uses: dannyskoog/pr-commenter-action@main
         with:
-          message: Updated existing comment!
-          updateExisting: true
+          message: Update existing comment. 1st comment
+          marker: <!-- my-marker -->
+
+      - name: Sleep for 10 seconds
+        run: sleep 10s
+        shell: bash
+
+      - uses: dannyskoog/pr-commenter-action@main
+        with:
+          message: Update existing comment. 2nd comment
+          marker: <!-- my-marker -->
