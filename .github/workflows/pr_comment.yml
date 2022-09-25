@@ -1,85 +1,22 @@
-name: CD - Deploy preview
+name: PR comment
 on:
   issue_comment:
     types: [created, edited]
+  pull_request_review:
+    types: [submitted, edited]
 
 jobs:
-  get_preview_channel:
-    name: Get preview channel
+  comment:
+    name: Comment
     runs-on: ubuntu-latest
     outputs:
       preview_channel: ${{ steps.preview_channel.outputs.preview_channel }}
 
     if: |
-      github.event.issue.pull_request &&
-      contains(github.event.comment.body, 'deploy preview')
+      contains(github.event.review.body, 'deploy to dev please') ||
+      (contains(github.event.comment.body, 'deploy to dev please') && github.event.issue.pull_request)
 
     steps:
-      - uses: actions-ecosystem/action-regex-match@v2
-        id: regex-match
+      - uses: dannyskoog/pr-commenter-action@main
         with:
-          text: ${{ github.event.comment.body }}
-          regex: 'deploy (preview[123456])'
-
-      - name: Exit if preview channel not defined
-        if: ${{ steps.regex-match.outputs.match == '' }}
-        run: exit 1
-
-      - name: Write preview channel to env
-        id: preview_channel
-        run: echo "::set-output name=preview_channel::${{ steps.regex-match.outputs.group1 }}"
-
-  comment_deploy_in_progress:
-    needs: get_preview_channel
-    name: Comment deploy in progress
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          number: ${{ github.event.issue.number }}
-          message: |
-            :hourglass_flowing_sand: Deploying **${{ needs.get_preview_channel.outputs.preview_channel }}** environment. Please wait...
-      - name: Set PR Context Status to Pending
-        uses: gpuliyar/pr-status-action@v1.0.0
-        with:
-          repository: ${{ github.repository }}
-          pr-number: ${{ github.event.issue.number }}
-          context: ${{ github.workflow }}
-          state: pending
-          description: " "
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  deploy_preview:
-    needs: get_preview_channel
-    name: Deploy - ${{ needs.get_preview_channel.outputs.preview_channel }}
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Sleep for 10 seconds
-        run: sleep 10s
-        shell: bash
-
-  comment_deploy_finished:
-    needs: [get_preview_channel, deploy_preview]
-    name: Comment deploy finished
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          number: ${{ github.event.issue.number }}
-          message: |
-            :rocket: Successful deploy of **${{ needs.get_preview_channel.outputs.preview_channel }}** environment. Please access it [here](https://${{ needs.get_preview_channel.outputs.preview_channel }}.fm.stage.voiapp.io/)
-      - name: Set PR Context Status to success
-        uses: gpuliyar/pr-status-action@v1.0.0
-        if: always()
-        with:
-          repository: ${{ github.repository }}
-          pr-number: ${{ github.event.issue.number }}
-          context: ${{ github.workflow }}
-          state: ${{ job.status }}
-          description: " "
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          message: This is my cool comment!
