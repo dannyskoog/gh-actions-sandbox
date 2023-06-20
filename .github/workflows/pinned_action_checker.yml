@@ -1,0 +1,12 @@
+name: CI
+on: [pull_request]
+
+jobs:
+  check_pinned_actions:
+    name: Check pinned actions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Ensure SHA pinned actions
+        uses: zgosalvez/github-actions-ensure-sha-pinned-actions@555a30da2656b4a7cf47b107800bef097723363e #v2.1.3
