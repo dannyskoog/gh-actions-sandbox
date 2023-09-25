@@ -14,7 +14,7 @@ jobs:
       (contains(github.event.comment.body, 'create new comment') && github.event.issue.pull_request)
 
     steps:
-      - uses: dannyskoog/pr-commenter-action@main
+      - uses: dannyskoog/pull-request-comment@v1
         with:
           message: Create new comment
 
@@ -26,7 +26,7 @@ jobs:
       (contains(github.event.comment.body, 'update comment') && github.event.issue.pull_request)
 
     steps:
-      - uses: dannyskoog/pr-commenter-action@main
+      - uses: dannyskoog/pull-request-comment@v1
         with:
           message: Update existing comment. 1st comment
           marker: <!-- my-marker -->
@@ -35,7 +35,7 @@ jobs:
         run: sleep 10s
         shell: bash
 
-      - uses: dannyskoog/pr-commenter-action@main
+      - uses: dannyskoog/pull-request-comment@v1
         with:
           message: Update existing comment. 2nd comment
           marker: <!-- my-marker -->
