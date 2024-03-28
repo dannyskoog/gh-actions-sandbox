@@ -1,0 +1,21 @@
+{
+    "name": "gh-actions-sandbox",
+    "version": "1.0.0",
+    "description": "My GitHub Actions sandbox project",
+    "main": "index.js",
+    "scripts": {
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dannyskoog/gh-actions-sandbox.git"
+    },
+    "keywords": [
+        "GitHub Actions",
+        "sandbox"
+    ],
+    "author": "Danny Skoog",
+    "license": "MIT",
+    "dependencies": {
+        "typescript": "^4.1.0"
+    }
+}
