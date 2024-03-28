@@ -16,6 +16,6 @@
     "author": "Danny Skoog",
     "license": "MIT",
     "dependencies": {
-        "typescript": "^4.1.0"
+        "typescript": "^5.4.3"
     }
 }
