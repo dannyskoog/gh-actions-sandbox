@@ -1,0 +1,29 @@
+name: PR comment
+on:
+  issue_comment:
+    types: [created, edited]
+  pull_request_review:
+    types: [submitted, edited]
+
+jobs:
+  get_pr_head_sha:
+    name: Create new comment
+    runs-on: ubuntu-latest
+    if: |
+      contains(github.event.review.body, 'deploy to stage please') ||
+      (contains(github.event.comment.body, 'deploy to stage please') && github.event.issue.pull_request)
+
+    steps:
+      - name: Get and write PR data to output
+        run: echo "PR_DATA=$(gh pr view "$PR_NUMBER" --repo "$REPOSITORY" --json headRefOid --json number)" >> "$GITHUB_OUTPUT"
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
+          REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print PR data
+        run: echo "$PR_DATA.number"
+
+      - name: Print PR head ref
+        run: echo "$PR_DATA.headRefOid"
+
