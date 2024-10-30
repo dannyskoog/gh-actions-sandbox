@@ -15,15 +15,18 @@ jobs:
 
     steps:
       - name: Get and write PR data to output
-        run: echo "PR_DATA=$(gh pr view "$PR_NUMBER" --repo "$REPOSITORY" --json headRefOid --json number)" >> "$GITHUB_ENV"
+        id: pr_data
+        run: |
+          PR_DATA=$(gh pr view "$PR_NUMBER" --repo "$REPOSITORY" --json headRefOid --json number)
+          echo "NUMBER=$PR_DATA.number" >> "$GITHUB_OUTPUT"
+          echo "HEAD_REF=$PR_DATA.headRefOid" >> "$GITHUB_OUTPUT"
         env:
           PR_NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
           REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Print PR number
-        run: echo "$PR_DATA.number"
+        run: echo ${{ steps.pr_data.outputs.NUMBER }}
 
       - name: Print PR head ref
-        run: echo "$PR_DATA.headRefOid"
-
+        run: echo ${{ steps.pr_data.outputs.HEAD_REF }}
