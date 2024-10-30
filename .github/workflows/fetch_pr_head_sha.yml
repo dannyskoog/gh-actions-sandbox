@@ -14,6 +14,9 @@ jobs:
       (contains(github.event.comment.body, 'deploy to stage please') && github.event.issue.pull_request)
 
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
       - name: Get and write PR data to output
         id: pr_data
         run: |
