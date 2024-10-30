@@ -18,8 +18,8 @@ jobs:
         id: pr_data
         run: |
           PR_DATA=$(gh pr view "$PR_NUMBER" --json headRefOid,number)
-          echo "NUMBER=$(echo $PR_DATA | jq -r '.number')" >> "$GITHUB_OUTPUT"
-          echo "HEAD_REF=$(echo $PR_DATA | jq -r '.headRefOid')" >> "$GITHUB_OUTPUT"
+          echo "NUMBER=$(echo $PR_DATA | jq .number)" >> "$GITHUB_OUTPUT"
+          echo "HEAD_REF=$(echo $PR_DATA | jq .headRefOid)" >> "$GITHUB_OUTPUT"
         env:
           PR_NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
           GITHUB_TOKEN: ${{ github.token }}
