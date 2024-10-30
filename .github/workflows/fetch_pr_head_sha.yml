@@ -17,13 +17,12 @@ jobs:
       - name: Get and write PR data to output
         id: pr_data
         run: |
-          PR_DATA=$(gh pr view "$PR_NUMBER" --repo "$REPOSITORY" --json headRefOid,number)
+          PR_DATA=$(gh pr view "$PR_NUMBER" --json headRefOid,number)
           echo "NUMBER=$(echo $PR_DATA | jq -r '.number')" >> "$GITHUB_OUTPUT"
           echo "HEAD_REF=$(echo $PR_DATA | jq -r '.headRefOid')" >> "$GITHUB_OUTPUT"
         env:
           PR_NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
-          REPOSITORY: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Print PR number
         run: echo ${{ steps.pr_data.outputs.NUMBER }}
