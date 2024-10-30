@@ -18,8 +18,8 @@ jobs:
         id: pr_data
         run: |
           PR_DATA=$(gh pr view "$PR_NUMBER" --repo "$REPOSITORY" --json headRefOid --json number)
-          echo "NUMBER=$PR_DATA.number" >> "$GITHUB_OUTPUT"
-          echo "HEAD_REF=$PR_DATA.headRefOid" >> "$GITHUB_OUTPUT"
+          echo "NUMBER=$(fromJson($PR_DATA).number)" >> "$GITHUB_OUTPUT"
+          echo "HEAD_REF=$(fromJson($PR_DATA).headRefOid)" >> "$GITHUB_OUTPUT"
         env:
           PR_NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
           REPOSITORY: ${{ github.repository }}
