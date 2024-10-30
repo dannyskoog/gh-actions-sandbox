@@ -1,4 +1,4 @@
-name: PR comment
+name: Fetch PR head SHA
 on:
   issue_comment:
     types: [created, edited]
@@ -7,7 +7,7 @@ on:
 
 jobs:
   get_pr_head_sha:
-    name: Create new comment
+    name: Get PR head SHA
     runs-on: ubuntu-latest
     if: |
       contains(github.event.review.body, 'deploy to stage please') ||
