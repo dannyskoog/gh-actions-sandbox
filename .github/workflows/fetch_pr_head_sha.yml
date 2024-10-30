@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Get and write PR data to output
-        run: echo "PR_DATA=$(gh pr view "$PR_NUMBER" --repo "$REPOSITORY" --json headRefOid --json number)" >> "$GITHUB_OUTPUT"
+        run: echo "PR_DATA=$(gh pr view "$PR_NUMBER" --repo "$REPOSITORY" --json headRefOid --json number)" >> "$GITHUB_ENV"
         env:
           PR_NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
           REPOSITORY: ${{ github.repository }}
